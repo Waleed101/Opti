@@ -1,0 +1,67 @@
+/*
+    -----------------------------------
+    Drip - Field Valve Reciever (TEST)
+    -----------------------------------
+    Created by: Waleed Sawan
+    Date: Jan 9, 2018
+    Description: Simply reads data from the moisture sensor and sends it through the RF pipeline to the Central Communication Hub. 
+    Basic program to merely test the underlying capabilities of the hardware and identify any stress points. Does not integerate
+    mesh.
+    
+    Change Log:
+    
+    Date       | Change   
+    ------------------------------------------------------------------------------
+    01/09/2018 | Created preliminary program to control valve and LEDS
+    01/13/2018 | Added RF transmission capabilities
+    11/09/2018 | Removed Serial Prompt
+*/
+
+// Intializing different libraries to control RF data transmitter
+
+#include <SPI.h>
+#include <nRF24L01.h>
+#include <RF24.h>
+RF24 radio(7, 8); // CE, CSN
+const byte addresses[][6] = {"00001", "00002"};
+
+int solenoidPin = 10, valveOff = 9, curMode = 0;
+
+void setup() {
+
+  // Setting up the probe to transmit
+  radio.begin();
+  radio.setPALevel(RF24_PA_MAX);
+  radio.openReadingPipe(1, addresses[1]);
+
+  // Turning off the valve
+  setValve(false);
+}
+
+void loop() {
+  // Delaying data to slow down receiving slightly
+  delay(5);
+  radio.startListening(); // Turning on the RF data receiving
+  if ( radio.available()) {
+    while (radio.available()) {
+      radio.read(&curMode, sizeof(curMode)); // Recieving data from the RF pipeline
+      setValve(curMode); // Setting the valve to the recieved mode
+    }
+    delay(5);
+  }
+}
+
+// Function to streamline setting the valve state
+void setValve (int state)
+{
+  if(state == 1) // Turn valve on if state is 1
+  {
+    digitalWrite(solenoidPin, HIGH); // Both solenoid valve and GREEN led are hooked up to the same port
+    digitalWrite(valveOff, LOW);   
+  }
+  else if(state == 0) // Turn valve off if state is 0
+  {
+    digitalWrite(solenoidPin, LOW);
+    digitalWrite(valveOff, HIGH);  
+  }
+}
