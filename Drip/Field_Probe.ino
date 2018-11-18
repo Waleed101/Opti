@@ -4,7 +4,7 @@
     -----------------------------------
 
     Created by: Waleed Sawan
-    Date: Feb. 1, 2018
+    Date: Nov. 19, 2017
     Description: Simply reads data from the moisture sensor and sends it through the RF pipeline to the Central Communication Hub. 
     Basic program to merely test the underlying capabilities of the hardware and identify any stress points. Does not integerate
     mesh.
@@ -13,8 +13,8 @@
     
     Date       | Change   
     ------------------------------------------------------------------------------
-    02/01/2018 | Created preliminary program to read data and put on Serial prompt
-    02/06/2018 | Added RF transmission capabilities
+    11/19/2018 | Created preliminary program to read data and put on Serial prompt
+    11/23/2018 | Added RF transmission capabilities
     11/09/2018 | Removed Serial Prompt
 */
 
